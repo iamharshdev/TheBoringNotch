@@ -37,9 +37,7 @@ struct DropItemView: View {
                     .allowsTightening(true)
             }
             .contentShape(Rectangle())
-            .onDrag {
-                handleOnDrag(for: item)
-            }
+            .onDrag { NSItemProvider(contentsOf: item.storageURL) ?? .init() }
             .frame(width: 64, height: 64)
             
             if hover {
@@ -64,16 +62,5 @@ struct DropItemView: View {
                 }
             }
         }
-    }
-
-    private func handleOnDrag(for item: TrayDrop.DropItem) -> NSItemProvider {
-        guard let itemProvider = NSItemProvider(contentsOf: item.storageURL) else {
-            return NSItemProvider()
-        }
-        
-        let nameWithoutExtension = (item.fileName as NSString).deletingPathExtension
-        itemProvider.suggestedName = nameWithoutExtension
-        
-        return itemProvider
     }
 }
